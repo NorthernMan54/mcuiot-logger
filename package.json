@@ -1,0 +1,32 @@
+{
+  "name": "mcuiot-logger",
+  "version": "0.0.1",
+  "description": "MCUIOT Data Logger Module for Google Sheets",
+  "main": "logger.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NorthernMan54/mcuiot-logger.git"
+  },
+  "keywords": [
+    "mcuiot",
+    "google sheets",
+    "iot logger"
+  ],
+  "engines": {
+    "node": ">=4.3.2",
+    "homebridge": ">=0.2.0"
+  },
+  "dependencies": {
+    "google-auth-library": "^0.10.0",
+    "googleapis": "^18.0.0"
+  },
+  "author": "NorthernMan54",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/NorthernMan54/mcuiot-logger/issues"
+  },
+  "homepage": "https://github.com/NorthernMan54/mcuiot-logger#readme"
+}
