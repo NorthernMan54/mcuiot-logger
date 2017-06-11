@@ -36,7 +36,7 @@ function logger(sheetID) {
 // "Data": {"Temperature": 22.11, "Humidity": 42.4, "Moisture": 2, "Status": 0,
 // "Barometer": 996.018, "Dew": 8.75, "Green": "On", "Red": "Off" }}
 
-logger.prototype.storeDHT(hostname,status,temperature,humidity)
+logger.prototype.storeDHT = function(hostname,status,temperature,humidity)
 {
   var data = {
     Temperature: temperature,
