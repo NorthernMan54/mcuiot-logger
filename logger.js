@@ -58,7 +58,7 @@ logger.prototype.storeDHT = function(hostname,status,temperature,humidity)
   }
 
   debug(response);
-  storeData(response);
+  logger.prototype.storeData(response);
 
 }
 
