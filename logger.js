@@ -32,7 +32,35 @@ function logger(sheetID) {
 
 }
 
-//{ "Hostname": "NODE-869815", "Model": "BME-GD", "Version": "1.3", "Firmware": "1.5.4", "Data": {"Temperature": 22.11, "Humidity": 42.4, "Moisture": 2, "Status": 0, "Barometer": 996.018, "Dew": 8.75, "Green": "On", "Red": "Off" }}
+//{ "Hostname": "NODE-869815", "Model": "BME-GD", "Version": "1.3", "Firmware": "1.5.4",
+// "Data": {"Temperature": 22.11, "Humidity": 42.4, "Moisture": 2, "Status": 0,
+// "Barometer": 996.018, "Dew": 8.75, "Green": "On", "Red": "Off" }}
+
+logger.prototype.storeDHT(hostname,status,temperature,humidity)
+{
+  var data = {
+    Temperature: temperature,
+    Humidity: humidity,
+    Moisture: 0,
+    Status: status,
+    Barometer: 0,
+    Dew: 0,
+    Green: "NA",
+    Red: "NA"
+  }
+
+  var response = {
+    Hostname: hostname,
+    Model: "RPI-DHT",
+    Version: "1.0",
+    Firmware: "1.0",
+    Data: data
+  }
+
+  debug(response);
+  storeData(response);
+
+}
 
 logger.prototype.storeData = function(response) {
 
