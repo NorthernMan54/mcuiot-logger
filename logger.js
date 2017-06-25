@@ -36,6 +36,32 @@ function logger(sheetID) {
 // "Data": {"Temperature": 22.11, "Humidity": 42.4, "Moisture": 2, "Status": 0,
 // "Barometer": 996.018, "Dew": 8.75, "Green": "On", "Red": "Off" }}
 
+logger.prototype.storeBME = function(hostname,status,temperature,humidity,barometer)
+{
+  var data = {
+    Temperature: temperature,
+    Humidity: humidity,
+    Moisture: 0,
+    Status: status,
+    Barometer: barometer,
+    Dew: 0,
+    Green: "NA",
+    Red: "NA"
+  }
+
+  var response = {
+    Hostname: hostname,
+    Model: "RPI-BME",
+    Version: "1.0",
+    Firmware: "1.0",
+    Data: data
+  }
+
+  debug(response);
+  logger.prototype.storeData(response);
+
+}
+
 logger.prototype.storeDHT = function(hostname,status,temperature,humidity)
 {
   var data = {
