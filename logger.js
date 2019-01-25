@@ -8,27 +8,27 @@ var auth;
 var spreadsheetId;
 
 module.exports = {
-    logger: logger
+  logger: logger
 }
 
 function logger(sheetID) {
 
-    // Load client secrets from a local file.
-    spreadsheetId = sheetID;
-    fs.readFile(SECRET_PATH, function processClientSecrets(err, content) {
-        if (err) {
-            console.log('Error loading client secret file, please follow the instructions in the README!!!' + err);
-            return;
-        }
-        // Authorize a client with the loaded credentials, then call the
-        // Drive API.
-        authorize(JSON.parse(content), function(authenticated) {
+  // Load client secrets from a local file.
+  spreadsheetId = sheetID;
+  fs.readFile(SECRET_PATH, function processClientSecrets(err, content) {
+    if (err) {
+      console.log('Error loading client secret file, please follow the instructions in the README!!!' + err);
+      return;
+    }
+    // Authorize a client with the loaded credentials, then call the
+    // Drive API.
+    authorize(JSON.parse(content), function(authenticated) {
 
-            auth = authenticated;
-            debug("Authenticated");
+      auth = authenticated;
+      debug("Authenticated");
 
-        });
     });
+  });
 
 }
 
@@ -36,8 +36,7 @@ function logger(sheetID) {
 // "Data": {"Temperature": 22.11, "Humidity": 42.4, "Moisture": 2, "Status": 0,
 // "Barometer": 996.018, "Dew": 8.75, "Green": "On", "Red": "Off" }}
 
-logger.prototype.storeBME = function(hostname,status,temperature,humidity,barometer)
-{
+logger.prototype.storeBME = function(hostname, status, temperature, humidity, barometer) {
   var data = {
     Temperature: temperature,
     Humidity: humidity,
@@ -62,8 +61,7 @@ logger.prototype.storeBME = function(hostname,status,temperature,humidity,barome
 
 }
 
-logger.prototype.storeDHT = function(hostname,status,temperature,humidity)
-{
+logger.prototype.storeDHT = function(hostname, status, temperature, humidity) {
   var data = {
     Temperature: temperature,
     Humidity: humidity,
@@ -90,39 +88,39 @@ logger.prototype.storeDHT = function(hostname,status,temperature,humidity)
 
 logger.prototype.storeData = function(response) {
 
-    var sheets = google.sheets('v4');
+  var sheets = google.sheets('v4');
 
-    var d = new Date();
+  var d = new Date();
 
-    var day = (d.getMonth() + 1).toString()+'/'+d.getDate().toString()+'/'+d.getFullYear().toString() +
-      ' '+d.getHours().toString()+':'+d.getMinutes().toString()+':'+d.getSeconds().toString();
+  var day = (d.getMonth() + 1).toString() + '/' + d.getDate().toString() + '/' + d.getFullYear().toString() +
+    ' ' + d.getHours().toString() + ':' + d.getMinutes().toString() + ':' + d.getSeconds().toString();
 
-    const rows = [
-        [ day, response.Hostname, response.Model, response.Version, response.Firmware,
-            response.Data.Temperature, response.Data.Humidity, response.Data.Moisture,
-            response.Data.Status, response.Data.Barometer, response.Data.Dew,
-            response.Data.Green, response.Data.Red
-        ]
-    ];
-    const request = {
-        spreadsheetId: spreadsheetId,
-        auth: auth,
-        range: 'Sheet1', // TODO: Update placeholder value.
-        valueInputOption: 'USER_ENTERED',
-        insertDataOption: 'INSERT_ROWS', // TODO: Update placeholder value.
-        resource: {
-            values: rows
-        }
-    };
+  const rows = [
+    [day, response.Hostname, response.Model, response.Version, response.Firmware,
+      response.Data.Temperature, response.Data.Humidity, response.Data.Moisture,
+      response.Data.Status, response.Data.Barometer, response.Data.Dew,
+      response.Data.Green, response.Data.Red
+    ]
+  ];
+  const request = {
+    spreadsheetId: spreadsheetId,
+    auth: auth,
+    range: 'Sheet1', // TODO: Update placeholder value.
+    valueInputOption: 'USER_ENTERED',
+    insertDataOption: 'INSERT_ROWS', // TODO: Update placeholder value.
+    resource: {
+      values: rows
+    }
+  };
 
-    sheets.spreadsheets.values.append(request, function(err, response) {
-        if (err) {
-            console.log('The API returned an error: ' + err);
-            debug(rows);
-            return;
-        }
-        debug(response);
-    });
+  sheets.spreadsheets.values.append(request, function(err, response) {
+    if (err) {
+      console.log('The API returned an error: ' + err);
+      debug(rows);
+      return;
+    }
+    debug(response);
+  });
 
 }
 
@@ -132,7 +130,7 @@ logger.prototype.storeData = function(response) {
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-    process.env.USERPROFILE) + '/.homebridge/';
+  process.env.USERPROFILE) + '/.homebridge/';
 var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-datalogger.json';
 var SECRET_PATH = TOKEN_DIR + 'logger_client_secret.json';
 
@@ -142,8 +140,8 @@ var SECRET_PATH = TOKEN_DIR + 'logger_client_secret.json';
 //        console.log('Error loading client secret file: ' + err);
 //        return;
 //    }
-    // Authorize a client with the loaded credentials, then call the
-    // Google Sheets API.
+// Authorize a client with the loaded credentials, then call the
+// Google Sheets API.
 //    authorize(JSON.parse(content), listMajors);
 //});
 
@@ -155,21 +153,21 @@ var SECRET_PATH = TOKEN_DIR + 'logger_client_secret.json';
  * @param {function} callback The callback to call with the authorized client.
  */
 function authorize(credentials, callback) {
-    var clientSecret = credentials.installed.client_secret;
-    var clientId = credentials.installed.client_id;
-    var redirectUrl = credentials.installed.redirect_uris[0];
-    var auth = new googleAuth();
-    var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+  var clientSecret = credentials.installed.client_secret;
+  var clientId = credentials.installed.client_id;
+  var redirectUrl = credentials.installed.redirect_uris[0];
+  var auth = new googleAuth();
+  var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
-    // Check if we have previously stored a token.
-    fs.readFile(TOKEN_PATH, function(err, token) {
-        if (err) {
-            getNewToken(oauth2Client, callback);
-        } else {
-            oauth2Client.credentials = JSON.parse(token);
-            callback(oauth2Client);
-        }
-    });
+  // Check if we have previously stored a token.
+  fs.readFile(TOKEN_PATH, function(err, token) {
+    if (err) {
+      getNewToken(oauth2Client, callback);
+    } else {
+      oauth2Client.credentials = JSON.parse(token);
+      callback(oauth2Client);
+    }
+  });
 }
 
 /**
@@ -181,27 +179,27 @@ function authorize(credentials, callback) {
  *     client.
  */
 function getNewToken(oauth2Client, callback) {
-    var authUrl = oauth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: SCOPES
+  var authUrl = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES
+  });
+  console.log('Authorize this app by visiting this url: ', authUrl);
+  var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  rl.question('Enter the code from that page here: ', function(code) {
+    rl.close();
+    oauth2Client.getToken(code, function(err, token) {
+      if (err) {
+        console.log('Error while trying to retrieve access token', err);
+        return;
+      }
+      oauth2Client.credentials = token;
+      storeToken(token);
+      callback(oauth2Client);
     });
-    console.log('Authorize this app by visiting this url: ', authUrl);
-    var rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    rl.question('Enter the code from that page here: ', function(code) {
-        rl.close();
-        oauth2Client.getToken(code, function(err, token) {
-            if (err) {
-                console.log('Error while trying to retrieve access token', err);
-                return;
-            }
-            oauth2Client.credentials = token;
-            storeToken(token);
-            callback(oauth2Client);
-        });
-    });
+  });
 }
 
 /**
@@ -209,16 +207,16 @@ function getNewToken(oauth2Client, callback) {
  *
  * @param {Object} token The token to store to disk.
  */
- function storeToken(token) {
-   try {
-     fs.mkdirSync(TOKEN_DIR);
-   } catch (err) {
-     if (err.code != 'EEXIST') {
-       throw err;
-     }
-   }
-   fs.writeFile(TOKEN_PATH, JSON.stringify(token), function(err) {
-     if (err) throw err;
-     console.log('Token stored to ' + TOKEN_PATH);
-   });
- }
+function storeToken(token) {
+  try {
+    fs.mkdirSync(TOKEN_DIR);
+  } catch (err) {
+    if (err.code != 'EEXIST') {
+      throw err;
+    }
+  }
+  fs.writeFile(TOKEN_PATH, JSON.stringify(token), function(err) {
+    if (err) throw err;
+    console.log('Token stored to ' + TOKEN_PATH);
+  });
+}
