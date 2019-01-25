@@ -1,6 +1,6 @@
 {
   "name": "mcuiot-logger",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "MCUIOT Data Logger Module for Google Sheets",
   "main": "logger.js",
   "scripts": {
