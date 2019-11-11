@@ -20,8 +20,8 @@
     "homebridge": ">=0.2.0"
   },
   "dependencies": {
-    "google-auth-library": "^0.10.0",
-    "googleapis": "^18.0.0"
+    "google-auth-library": ">0.10.0",
+    "googleapis": ">18.0.0"
   },
   "author": "NorthernMan54",
   "license": "Apache-2.0",
